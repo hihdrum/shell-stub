@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -f SHELLNAME.history*.arg*
+rm -f SHELLNAME.expect*
+SHELLNAME.clear.callcount
