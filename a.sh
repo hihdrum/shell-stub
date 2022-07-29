@@ -23,10 +23,17 @@ do
 done
 
 returnValue=$(cat ${expectFile})
-exit 255
+if [ $? -ne 0 ]; then
+  echo "戻り値を設定するファイル(${expectFile}) がcatできませんでした。" > /dev/stderr
+  exit 255
+fi
 
 # 実行時の出力
 cat ${expectOutputFile}
+if [ $? -ne 0 ]; then
+  echo "出力を設定するファイル(${expectOutputFile}) がcatできませんでした。" > /dev/stderr
+  exit 254
+fi
 
 # 情報の更新
 echo $((${callcount} + 1)) > a.callcount
