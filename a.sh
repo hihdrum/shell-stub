@@ -9,6 +9,13 @@ expectOutputFile="a.expectOutput${callcountStr}"
 # 戻り値
 expectFile="a.expect${callcountStr}"
 
+# 呼び出し引数の履歴
+historyFile="a.history${callcountStr}.arg1"
+
+# 呼び出し引数の保存
+echo "$1" > ${historyFile}
+
+
 returnValue=$(cat ${expectFile})
 
 # 実行時の出力
