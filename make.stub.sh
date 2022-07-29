@@ -2,11 +2,13 @@
 
 shellName=$1
 
-cat template.sh | sed 's/SHELLNAME/a/g' > ${shellName}.sh
-cat template.clear.callcount | sed 's/SHELLNAME/a/g' > ${shellName}.clear.callcount
-cat template.set.expect | sed 's/SHELLNAME/a/g' > ${shellName}.set.expect
-cat template.set.expectOutput | sed 's/SHELLNAME/a/g' > ${shellName}.set.expectOutput
-cat template.reset | sed 's/SHELLNAME/a/g' > ${shellName}.reset
+dirPath=$(dirname $0)
+
+cat ${dirPath}/template.sh | sed "s/SHELLNAME/${shellName}/g" > ${shellName}.sh
+cat ${dirPath}/template.clear.callcount | sed "s/SHELLNAME/${shellName}/g" > ${shellName}.clear.callcount
+cat ${dirPath}/template.set.expect | sed "s/SHELLNAME/${shellName}/g" > ${shellName}.set.expect
+cat ${dirPath}/template.set.expectOutput | sed "s/SHELLNAME/${shellName}/g" > ${shellName}.set.expectOutput
+cat ${dirPath}/template.reset | sed "s/SHELLNAME/${shellName}/g" > ${shellName}.reset
 
 chmod u+x ${shellName}.sh ${shellName}.clear.callcount \
           ${shellName}.set.expect ${shellName}.set.expectOutput ${shellName}.reset
