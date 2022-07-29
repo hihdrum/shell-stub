@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -f a.history*.arg*
+a.clear.callcount
