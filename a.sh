@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# スクリプト呼び出し回数情報
 callcount=$(cat a.callcount)
 callcountStr=$(echo ${callcount} | awk '{printf("%03d", $0 + 1)}')
 
@@ -21,10 +22,8 @@ do
 
 done
 
-
-
-
 returnValue=$(cat ${expectFile})
+exit 255
 
 # 実行時の出力
 cat ${expectOutputFile}
