@@ -7,5 +7,5 @@
 stubDir=$(dirname $0)
 
 callcountStr=$(echo $1 | awk '{printf("%03d", $0)}')
-echo $2 > ${stubDir}/SHELLNAME.expect${callcountStr}
+echo $2 > ${stubDir}/SHELLNAME.expect.return${callcountStr}
 

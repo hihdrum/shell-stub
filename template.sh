@@ -7,10 +7,10 @@ callcount=$(cat ${stubDir}/SHELLNAME.callcount)
 callcountStr=$(echo ${callcount} | awk '{printf("%03d", $0 + 1)}')
 
 # 実行時の出力
-expectOutputFile="${stubDir}/SHELLNAME.expectOutput${callcountStr}"
+expectOutputFile="${stubDir}/SHELLNAME.expect.output${callcountStr}"
 
 # 戻り値
-expectFile="${stubDir}/SHELLNAME.expect${callcountStr}"
+expectFile="${stubDir}/SHELLNAME.expect.return${callcountStr}"
 
 # 呼び出し引数の履歴保存
 argIndex=1
