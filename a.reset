@@ -1,5 +1,0 @@
-#!/bin/bash
-
-rm -f a.history*.arg*
-rm -f a.expect*
-a.clear.callcount
