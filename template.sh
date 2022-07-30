@@ -13,6 +13,8 @@ expectOutputFile="${stubDir}/SHELLNAME.expect.output${callcountStr}"
 expectFile="${stubDir}/SHELLNAME.expect.return${callcountStr}"
 
 # 呼び出し引数の履歴保存
+echo $# > "SHELLNAME.history${callcountStr}.argc"
+
 argIndex=1
 for arg in "$@"
 do
