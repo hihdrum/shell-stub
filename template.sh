@@ -1,14 +1,16 @@
 #!/bin/bash
 
+stubDir=$(dirname $0)
+
 # スクリプト呼び出し回数情報
-callcount=$(cat SHELLNAME.callcount)
+callcount=$(cat ${stubDir}/SHELLNAME.callcount)
 callcountStr=$(echo ${callcount} | awk '{printf("%03d", $0 + 1)}')
 
 # 実行時の出力
-expectOutputFile="SHELLNAME.expectOutput${callcountStr}"
+expectOutputFile="${stubDir}/SHELLNAME.expectOutput${callcountStr}"
 
 # 戻り値
-expectFile="SHELLNAME.expect${callcountStr}"
+expectFile="${stubDir}/SHELLNAME.expect${callcountStr}"
 
 # 呼び出し引数の履歴保存
 argIndex=1
@@ -36,7 +38,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # 情報の更新
-echo $((${callcount} + 1)) > SHELLNAME.callcount
+echo $((${callcount} + 1)) > ${stubDir}/SHELLNAME.callcount
 
 # 結果
 exit ${returnValue}

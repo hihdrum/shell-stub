@@ -1,5 +1,7 @@
 #!/bin/bash
 
-rm -f SHELLNAME.history*.arg*
-rm -f SHELLNAME.expect*
-SHELLNAME.clear.callcount
+stubDir=$(dirname $0)
+
+rm -f ${stubDir}/SHELLNAME.history*.arg*
+rm -f ${stubDir}/SHELLNAME.expect*
+${stubDir}/SHELLNAME.clear.callcount
