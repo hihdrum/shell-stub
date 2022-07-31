@@ -3,27 +3,22 @@
 # 本ディレクトリに shunit2 を用意して下さい。
 
 oneTimeSetUp() {
-  rm -rf stub
-  mkdir stub
-  pushd stub > /dev/null
+  mkdir stub.$$
+  pushd stub.$$ > /dev/null
   ../../make.stub.sh sample.sh
+  PATH=$(pwd):$PATH
   popd > /dev/null
 
-  PATH=$(pwd)/stub:$PATH
 }
-
-# oneTimeTearDownが最後のテストのtearDownよりも前に実行されるようなので、
-# この位置にstub削除は書けない。
-#oneTimeTearDown() {
-#  rm -rf stub
-#}
 
 setUp() {
   sample.sh.init
 }
 
 tearDown() {
-  sample.sh.rm.history
+  if [ -e stub.$$ ]; then
+    sample.sh.rm.history
+  fi
 }
 
 testReturnValue_times1() {
@@ -74,4 +69,7 @@ testoutput_times2() {
 
 # Load shuUnit2.
 . ./shunit2
+
+# テストスクリプトのTearDown
+rm -rf stub.$$
 
