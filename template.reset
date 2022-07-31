@@ -2,6 +2,5 @@
 
 stubDir=$(dirname $0)
 
-rm -f ${stubDir}/SHELLNAME.history*.arg*
 rm -f ${stubDir}/SHELLNAME.expect*
 ${stubDir}/SHELLNAME.clear.callcount
