@@ -8,7 +8,6 @@ oneTimeSetUp() {
   ../../make.stub.sh sample.sh
   PATH=$(pwd):$PATH
   popd > /dev/null
-
 }
 
 setUp() {
@@ -67,9 +66,53 @@ testoutput_times2() {
   assertEquals "DEF" ${output2}
 }
 
+testoutput_std2line() {
+  sample.sh.set.expect 1 0
+  echo -e "ABC\nDEF" > $(sample.sh.get.expect.stdout.path 1)
+
+  sample.sh > resultOut
+  diff <(echo -e "ABC\nDEF") resultOut
+  ret=$?
+
+  assertEquals 0 ${ret}
+
+  rm -f resultOut
+}
+
+testoutput_stdErr2line() {
+  sample.sh.set.expect 1 0
+  echo -e "ABC\nDEF" > $(sample.sh.get.expect.stderr.path 1)
+
+  sample.sh 2> resultOut
+  diff <(echo -e "ABC\nDEF") resultOut
+  ret=$?
+
+  assertEquals 0 ${ret}
+
+  rm -f resultOut
+}
+
+testoutput_stdout_stdErr() {
+  sample.sh.set.expect 1 0
+  echo -e "ABC\nDEF" > $(sample.sh.get.expect.stdout.path 1)
+  echo -e "HIJ\nLMN" > $(sample.sh.get.expect.stderr.path 1)
+
+  sample.sh > resultStdout 2> resultStderr
+  diff <(echo -e "ABC\nDEF") resultStdout
+  diff <(echo -e "HIJ\nLMN") resultStderr
+  ret=$?
+
+  assertEquals 0 ${ret}
+
+  rm -f resultStdout
+  rm -f resultStderr
+}
+
 # Load shuUnit2.
 . ./shunit2
 
 # テストスクリプトのTearDown
+# oneTimeTeaDownに記述すると上手く行かないので
+# ここで行う。
 rm -rf stub.$$
 
