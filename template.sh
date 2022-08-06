@@ -35,20 +35,32 @@ done
 # 実行時の戻り値取得と出力
 #----------------------------------------
 # 戻り値
-expectReturnFile="${stubDir}/SHELLNAME.expect.return${callcountStr}"
+expectReturnFile="${stubDir}/SHELLNAME.expect${callcountStr}.return"
 returnValue=$(cat ${expectReturnFile})
 if [ $? -ne 0 ]; then
-  echo "戻り値を設定するファイル(${expectReturnFile}) がcatできませんでした。" > /dev/stderr
+  echo "戻り値を設定するファイル(${expectReturnFile}) がcatできませんでした。" >> $0.log
   exit 255
 fi
 
-# 出力
-expectOutputFile="${stubDir}/SHELLNAME.expect.output${callcountStr}"
-cat ${expectOutputFile}
-if [ $? -ne 0 ]; then
-  echo "出力を設定するファイル(${expectOutputFile}) がcatできませんでした。" > /dev/stderr
-  exit 254
+# 標準出力
+expectStdOutputFile="${stubDir}/SHELLNAME.expect${callcountStr}.stdout"
+if [ -r ${expectStdOutputFile} ]; then
+  cat ${expectStdOutputFile}
+  if [ $? -ne 0 ]; then
+    echo "標準出力を設定するファイル(${expectStdOutputFile}) がcatできませんでした。" >> $0.log
+    exit 254
+  fi
 fi
+
+expectStdErrOutputFile="${stubDir}/SHELLNAME.expect${callcountStr}.stderr"
+if [ -r ${expectStdErrOutputFile} ]; then
+  cat ${expectStdErrOutputFile} > /dev/stderr
+  if [ $? -ne 0 ]; then
+    echo "標準出力を設定するファイル(${expectStdErrOutputFile}) がcatできませんでした。" >> $0.log
+    exit 254
+  fi
+fi
+
 
 #----------------------------------------
 # 情報の更新

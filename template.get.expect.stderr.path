@@ -1,0 +1,14 @@
+#!/bin/bash
+#------------------------------------------------------------
+# 指定回数目に呼び出された際の標準エラー出力値を保存する
+# ファイルパスを出力する。
+#------------------------------------------------------------
+if [ $# -ne 1 ]; then
+  echo "Usage : $(basename $0) 回数"
+  exit 2
+fi
+
+stubDir=$(dirname $0)
+callcountStr=$(echo $1 | awk '{printf("%03d", $0)}')
+
+echo ${stubDir}/SHELLNAME.expect${callcountStr}.stderr

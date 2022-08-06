@@ -3,4 +3,5 @@
 stubDir=$(dirname $0)
 
 rm -f ${stubDir}/SHELLNAME.expect*
+rm -f ${stubDir}/SHELLNAME.log
 ${stubDir}/SHELLNAME.clear.callcount
