@@ -1,97 +1,102 @@
 # shell-stub
 シェルスクリプトのスタブ作成用のスクリプトです。
 
-# 使用準備
+シェルスクリプトの単体試験時のスタブ作成の手間を減らせないかと作成しました。
+
+期待値設定 : 指定回数呼び出し時の戻り値と出力を設定します。
+
+
+# 使用準備から使用例まで
 
 $ git clone https://github.com/hihdrum/shell-stub.git
-Cloning into 'shell-stub'...
-remote: Enumerating objects: 139, done.
-remote: Counting objects: 100% (139/139), done.
-remote: Compressing objects: 100% (71/71), done.
-remote: Total 139 (delta 58), reused 134 (delta 55), pack-reused 0
-Receiving objects: 100% (139/139), 18.80 KiB | 6.27 MiB/s, done.
-Resolving deltas: 100% (58/58), done.
 
 「Download ZIP」からダウンロードして解凍しても構いません。
 
 $ ls
 shell-stub
 
-shell-stubに移動してパスを通します。
+## パスの設定
+
+shell-stubに移動してmake.stub.shがあるディレクトリにパスを通します。
 
 $ cd shell-stub/
 $ PATH=$(pwd):$PATH
+
+## スタブの作成
 
 実際にスタブを作成して使ってみます。スタブはstubディレクトリに配置することにします。
 
 $ mkdir stub
 $ cd stub/
 
-## スタブの作成
-
 sample.shというシェルスクリプトのスタブを作成します。
 
 $ make.stub.sh sample.sh
-$ ls
-sample.sh            sample.sh.clear.callcount  sample.sh.rm.history
-sample.sh.callcount  sample.sh.init             sample.sh.set.expect
 
-スタブ配置ディレクトリにもパスを通しておきます。
+sample.sh他スタブで使用するファイルが作成されます。
+スタブを作成したディレクトリにもパスを通しておきます。
 
 $ PATH=$(pwd):$PATH
+
+## テスト用ディレクトリの作成
 
 呼び出しテスト用の別ディレクトリを作成し実際に使ってみます。
 
 $ mkdir ../calltest
 $ cd ../calltest/
 
-## 期待値の設定
-1回目の呼び出し時に0を、2回目の呼び出し時に1を返す設定を行い呼び出してみます。
+## 期待値の設定と呼び出し
+sample.shの1回目の呼び出し時に0を、2回目の呼び出し時に1を返す設定を行い呼び出してみます。
 
-$ sample.sh.set.expect 1 0 ""
-$ sample.sh.set.expect 2 1 ""
+### 戻り値
+$ sample.sh.set.expect 1 0
+$ sample.sh.set.expect 2 1
 
-$ sample.sh
-$ echo $?
+$ sample.sh; echo $?
 0
-$ sample.sh
-$ echo $?
+$ sample.sh; echo $?
 1
 
-標準出力への出力も設定することができます。(標準エラー出力には対応していません。)
+呼び出し時の引数は以下の様になっています。
 
-$ sample.sh.set.expect 1 0 "ABC"
-$ sample.sh.set.expect 2 10 "$(echo DEF)"
+$ sample.sh.set.expect
+Usage : sample.sh.set.expect 回数 戻り値 [標準出力]
 
-スタブは呼び出された回数をファイルに記録し覚えているので、再度1回目として呼び出すにはクリア処理を行って呼び出します。
+
+### 標準出力
+標準出力への出力値も設定してみます。
+上記からの流れで2回呼ばれたことになっているので、実行前にスタブで保持している呼び出し回数の情報をクリアします。
 
 $ sample.sh.clear.callcount
 
+$ sample.sh.set.expect 1 0 "ABC"
+$ sample.sh
+ABC$
 
+標準出力への設定は以下も使うことができます。より複雑な出力を設定する場合はこちらが良いと思います。
 
+$ echo -e "A\nBC" > $(sample.sh.get.expect.stdout.path 1)
+$ sample.sh
+A
+BC
+$ echo $?
+0
 
+呼び出し時の引数は以下の様になっています。
+$ sample.sh.get.expect.stdout.path
+Usage : sample.sh.get.expect.stdout.path 回数
 
+$ sample.sh.get.expect.stdout.path 1
+スタブを作成したディレクトリ/sample.sh.expect001.stdout
 
+sample.sh.expect001.stdoutが1回目に呼び出された際に標準出力に出力する情報を保持するファイルになっています。このファイルを直接編集しても構いません。
 
+### 未設定時
 
-
-
-1回目の呼び出し時に戻り値10を返し,100を出させたい場合、
-スタブ名.set.expectを実行します。
-
-$ sample.sh.set.expect 1 10 "output 100"
-
-呼び出し例
+期待値を設定している回数を超えて呼び出すと以下のようなエラーとなります。
 
 $ sample.sh
-output 100$ echo $?
-10
-
-期待値を設定していない状態でスタブを呼び出すとエラーになります。
-
-$ sample.sh
-cat: スタブ配置ディレクトリ/sample.sh.expect.return002: そのようなファイルやディレクトリはありません
-戻り値を設定するファイル(スタブ配置ディレクトリ/sample.sh.expect.return002) がcatできませんでした。
+cat: スタブを作成したディレクトリ/sample.sh.expect003.return: そのようなファイルやディレクトリはありません
 
 ## 呼び出し回数のクリア
 スタブは呼び出された回数をファイルに保持しており、呼び出された際は呼び出し回数に対応した戻り値、出力ファイルを参照し期待値を返します。呼び出し回数を0にクリアしたい場合は以下を実行します。
@@ -101,42 +106,43 @@ $ sample.sh.clear.callcount
 期待値設定のクリアは行わないため設定済の期待値は再度使用することができます。
 
 $ sample.sh
-output 100$ echo $?
-10
+A
+BC
+$ echo $?
+0
 
-## 呼び出し情報
+
+## 呼び出し引数履歴
 スタブを呼び出すと呼び出された際の引数の個数(argc)と各引数の情報(argX)を保持するファイルがワーキングディレクトリに作成されます。1回目に呼ばれた場合のファイルがhistory001となります。
-
-$ ls
-sample.sh.history001.argc
 
 $ cat sample.sh.history001.argc
 0
 
-呼び出し時に引数を渡さなかったのでargcは0となっています。
+呼び出し時に引数を渡していない場合、argcは0となります。
+引数を渡して呼び出してみます。
 
 $ sample.sh.clear.callcount
-$ sample.sh 1 AB "C D"
-output 100$
-
-$ ls
-sample.sh.history001.arg1  sample.sh.history001.arg3
-sample.sh.history001.arg2  sample.sh.history001.argc
+$ sample.sh 1 "A B" C
+A
+BC
+$ cat sample.sh.history001.argc
+3
 $ cat sample.sh.history001.arg1
 1
 $ cat sample.sh.history001.arg2
-AB
+A B
 $ cat sample.sh.history001.arg3
-C D
+C
 
-呼び出し情報は以下で削除できます。
+## 呼び出し引数履歴のクリア
+呼び出し引数履歴のファイルはrmで直接削除しても構いませんが、以下でも行うことができます。
 
 $ sample.sh.rm.history
-$ ls
 
 # 初期化(呼び出し回数のクリア, 期待値設定のクリア)
+呼び出し回数のクリアと期待値設定のクリアを同時に行いたい場合は、以下のコマンドで行うことができます。
 
-
+$ sample.sh.init
 
 
 # 使用例
