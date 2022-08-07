@@ -144,3 +144,31 @@ $ sample.sh.init
 ```
 
 # 使用例
+testディレクトリに幾つかのテストと使用例があります。
+テストにはshunit2を使用しています。実行の際は以下のリポジトリからshunit2ファイルを取得して
+testディレクトリにコピーして下さい。
+
+  shunit2 : https://github.com/kward/shunit2
+
+- dateStubSample : dateコマンドのスタブを使用したサンプル
+- useBuiltinSample : ビルトインコマンド(cd, echo)のスタブを使用するサンプル
+
+## dateStubSampleの実行例
+```
+$ pwd
+shell-stubのトップディレクトリ/test
+$ ls shunit2 # コピーしたshunit2ファイル
+shunit2
+$ cd dateStubSample/
+$ ls
+dateStub_test.sh
+$ ./dateStub_test.sh
+testPartyLikeItIs1999
+ASSERT:It's not 1999 :-( expected:<1999> but was:<2022>
+shunit2:ERROR testPartyLikeItIs1999() returned non-zero return code.
+testPartyLikeItIs1999_UseStub
+
+Ran 2 tests.
+
+FAILED (failures=1)
+```
