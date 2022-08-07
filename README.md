@@ -163,10 +163,10 @@ $ cd dateStubSample/
 $ ls
 dateStub_test.sh
 $ ./dateStub_test.sh
-testPartyLikeItIs1999
+testPartyLikeItIs1999         # dateコマンドを使用しているテスト
 ASSERT:It's not 1999 :-( expected:<1999> but was:<2022>
 shunit2:ERROR testPartyLikeItIs1999() returned non-zero return code.
-testPartyLikeItIs1999_UseStub
+testPartyLikeItIs1999_UseStub  # dateスタブを使用したテスト
 
 Ran 2 tests.
 
