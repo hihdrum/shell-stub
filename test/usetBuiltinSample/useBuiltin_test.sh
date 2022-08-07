@@ -1,7 +1,4 @@
 #!/bin/bash
-
-# 本ディレクトリに shunit2 を用意して下さい。
-
 # --------------------------------------------------------------------------
 # 組み込みコマンドcd、echo を利用しているスクリプトで、cd、echoの動作を
 # スタブで制御する例
@@ -34,7 +31,6 @@ tearDown() {
   fi
 }
 
-
 test_cdError() {
 
   cd.init
@@ -43,8 +39,8 @@ test_cdError() {
   # ビルトインコマンドの無効化
   enable -n cd
 
-  # enable -n は子シェルに影響しないようなので、カレントシェルでexample01.shを実行する。
-  output=$(. example01.sh)
+  # enable -n は子シェルに影響しないようなので、カレントシェルでuseBuiltin.shを実行する。
+  output=$(. useBuiltin.sh)
   ret=$?
 
   # ビルトインコマンドの有効化
@@ -67,7 +63,7 @@ test_echoError() {
   enable -n cd
   enable -n echo
 
-  output=$(. example01.sh)
+  output=$(. useBuiltin.sh)
   ret=$?
 
   enable cd
@@ -90,7 +86,7 @@ test_NoError() {
   enable -n cd
   enable -n echo
 
-  output=$(. example01.sh)
+  output=$(. useBuiltin.sh)
   ret=$?
 
   enable cd
@@ -107,6 +103,6 @@ test_NoError() {
 
 # テストスクリプトのTearDown
 # oneTimeTeaDownに記述すると上手く行かないので
-# ここで行う。
+# ここでスタブディレクトリを削除する。
 rm -rf stub.$$
 
